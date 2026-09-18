@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en" data-bs-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EdgeRunner</title>
+<link rel="stylesheet" href="./css/bootstrap.min.css">
+<link rel="stylesheet" href="./js/monaco/monaco.bundle.css">
+<link rel="stylesheet" href="./css/main.css">
+</head>
+<body>
+
+<!-- ============ menu bar ============ -->
+<header id="menubar">
+    <span class="brand">EdgeRunner</span>
+
+    <nav class="menus">
+        <div class="dropdown">
+            <button class="menu-btn" data-bs-toggle="dropdown">File</button>
+            <ul class="dropdown-menu">
+                <li><button class="dropdown-item" data-action="file.new">New file<kbd>Ctrl N</kbd></button></li>
+                <li><button class="dropdown-item" data-action="file.open">Open file<kbd>Ctrl O</kbd></button></li>
+                <li><button class="dropdown-item" data-action="folder.open">Open folder</button></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><button class="dropdown-item" data-action="file.save">Save<kbd>Ctrl S</kbd></button></li>
+                <li><button class="dropdown-item" data-action="file.saveAs">Save as</button></li>
+                <li><button class="dropdown-item" data-action="file.saveAll">Save all</button></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><button class="dropdown-item" data-action="file.close">Close editor<kbd>Ctrl W</kbd></button></li>
+            </ul>
+        </div>
+
+        <div class="dropdown">
+            <button class="menu-btn" data-bs-toggle="dropdown">Edit</button>
+            <ul class="dropdown-menu">
+                <li><button class="dropdown-item" data-action="edit.undo">Undo<kbd>Ctrl Z</kbd></button></li>
+                <li><button class="dropdown-item" data-action="edit.redo">Redo<kbd>Ctrl Y</kbd></button></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><button class="dropdown-item" data-action="edit.cut">Cut</button></li>
+                <li><button class="dropdown-item" data-action="edit.copy">Copy</button></li>
+                <li><button class="dropdown-item" data-action="edit.paste">Paste</button></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><button class="dropdown-item" data-action="edit.find">Find<kbd>Ctrl F</kbd></button></li>
+                <li><button class="dropdown-item" data-action="edit.replace">Replace<kbd>Ctrl H</kbd></button></li>
+                <li><button class="dropdown-item" data-action="edit.format">Format document</button></li>
+                <li><button class="dropdown-item" data-action="edit.comment">Toggle comment</button></li>
+            </ul>
+        </div>
+
+        <div class="dropdown">
+            <button class="menu-btn" data-bs-toggle="dropdown">View</button>
+            <ul class="dropdown-menu">
+                <li><button class="dropdown-item" data-action="view.explorer">Explorer</button></li>
+                <li><button class="dropdown-item" data-action="view.search">Search</button></li>
+                <li><button class="dropdown-item" data-action="view.scm">Source control</button></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><button class="dropdown-item" data-action="view.panel">Toggle panel<kbd>Ctrl J</kbd></button></li>
+                <li><button class="dropdown-item" data-action="view.drawer">Toggle sidebar<kbd>Ctrl B</kbd></button></li>
+                <li><button class="dropdown-item" data-action="view.minimap">Toggle minimap</button></li>
+                <li><button class="dropdown-item" data-action="view.wrap">Toggle word wrap</button></li>
+            </ul>
+        </div>
+
+        <div class="dropdown">
+            <button class="menu-btn" data-bs-toggle="dropdown">Run</button>
+            <ul class="dropdown-menu">
+                <li><button class="dropdown-item" data-action="run.start">Run file<kbd>F5</kbd></button></li>
+                <li><button class="dropdown-item" data-action="run.build">Build project</button></li>
+                <li><button class="dropdown-item" data-action="run.stop">Stop</button></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><button class="dropdown-item" data-action="debug.start">Start debugging</button></li>
+                <li><button class="dropdown-item" data-action="debug.step">Step over<kbd>F10</kbd></button></li>
+                <li><button class="dropdown-item" data-action="debug.stepIn">Step into<kbd>F11</kbd></button></li>
+                <li><button class="dropdown-item" data-action="debug.breakpoint">Toggle breakpoint<kbd>F9</kbd></button></li>
+            </ul>
+        </div>
+
+        <div class="dropdown">
+            <button class="menu-btn" data-bs-toggle="dropdown">Terminal</button>
+            <ul class="dropdown-menu">
+                <li><button class="dropdown-item" data-action="term.new">New terminal</button></li>
+                <li><button class="dropdown-item" data-action="term.clear">Clear</button></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><button class="dropdown-item" data-action="host.connect">Connect to host</button></li>
+                <li><button class="dropdown-item" data-action="host.disconnect">Disconnect</button></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="menubar-right">
+        <button class="icon-btn accent" data-action="run.start" title="Run">
+            <svg viewBox="0 0 16 16"><path d="M4 2.5l9 5.5-9 5.5z"/></svg>
+        </button>
+        <button class="icon-btn" data-action="run.stop" title="Stop">
+            <svg viewBox="0 0 16 16"><rect x="4" y="4" width="8" height="8" rx="1"/></svg>
+        </button>
+    </div>
+</header>
+
+<!-- ============ body ============ -->
+<div id="wrapper">
+
+    <aside id="drawer">
+        <nav id="sidetabs">
+            <button class="side-tab active" data-panel="files">Files</button>
+            <button class="side-tab" data-panel="search">Search</button>
+            <button class="side-tab" data-panel="scm">Git</button>
+            <button class="side-tab" data-panel="debug">Debug</button>
+        </nav>
+
+        <div class="side-body">
+            <section class="side-panel active" data-panel="files">
+                <div class="side-head">
+                    <span>edgerunner</span>
+                    <button class="icon-btn sm" data-action="file.new" title="New file">
+                        <svg viewBox="0 0 16 16"><path d="M8 3v10M3 8h10" stroke-width="1.5" fill="none"/></svg>
+                    </button>
+                </div>
+                <ul class="tree" data-action="tree.select">
+                    <li class="folder open" data-path="js">
+                        <span class="row"><i class="chev"></i>js</span>
+                        <ul>
+                            <li class="file active" data-path="js/editor.js"><span class="row">editor.js</span></li>
+                            <li class="file dirty" data-path="js/main.js"><span class="row">main.js</span></li>
+                            <li class="file" data-path="js/ui.js"><span class="row">ui.js</span></li>
+                        </ul>
+                    </li>
+                    <li class="folder" data-path="css">
+                        <span class="row"><i class="chev"></i>css</span>
+                        <ul>
+                            <li class="file" data-path="css/main.css"><span class="row">main.css</span></li>
+                        </ul>
+                    </li>
+                    <li class="file" data-path="ide.html"><span class="row">ide.html</span></li>
+                </ul>
+            </section>
+
+            <section class="side-panel" data-panel="search">
+                <div class="side-head"><span>Search</span></div>
+                <div class="side-pad">
+                    <input class="field" type="text" placeholder="Search" data-action="search.query">
+                    <input class="field" type="text" placeholder="Replace" data-action="search.replace">
+                </div>
+                <p class="empty">No results yet.</p>
+            </section>
+
+            <section class="side-panel" data-panel="scm">
+                <div class="side-head"><span>Changes</span></div>
+                <div class="side-pad">
+                    <input class="field" type="text" placeholder="Commit message" data-action="scm.message">
+                    <button class="btn-wide" data-action="scm.commit">Commit</button>
+                </div>
+                <ul class="tree">
+                    <li class="file dirty" data-path="js/main.js"><span class="row">main.js<em>M</em></span></li>
+                </ul>
+            </section>
+
+            <section class="side-panel" data-panel="debug">
+                <div class="side-head"><span>Run and debug</span></div>
+                <div class="side-pad">
+                    <button class="btn-wide" data-action="debug.start">Start debugging</button>
+                </div>
+                <h3 class="side-sub">Breakpoints</h3>
+                <p class="empty">None set.</p>
+                <h3 class="side-sub">Variables</h3>
+                <p class="empty">Not running.</p>
+            </section>
+        </div>
+    </aside>
+
+    <div id="splitter" role="separator" aria-orientation="vertical"
+         aria-valuemin="170" aria-valuemax="460" aria-valuenow="250"
+         aria-label="Resize sidebar" tabindex="0"></div>
+
+    <main id="main">
+        <div id="tabstrip">
+            <button class="tab active" data-path="js/editor.js">
+                editor.js<i class="x" data-action="tab.close"></i>
+            </button>
+            <button class="tab dirty" data-path="js/main.js">
+                main.js<i class="x" data-action="tab.close"></i>
+            </button>
+        </div>
+
+        <div id="editorcont"></div>
+
+        <section id="panel">
+            <nav id="paneltabs">
+                <button class="panel-tab active" data-panel="terminal">Terminal</button>
+                <button class="panel-tab" data-panel="problems">Problems</button>
+                <button class="panel-tab" data-panel="output">Output</button>
+                <button class="icon-btn sm right" data-action="view.panel" title="Hide panel">
+                    <svg viewBox="0 0 16 16"><path d="M4 8h8" stroke-width="1.5" fill="none"/></svg>
+                </button>
+            </nav>
+            <pre id="panelout" data-action="panel.out">Not connected. Use Terminal &rsaquo; Connect to host.</pre>
+        </section>
+    </main>
+</div>
+
+<!-- ============ status bar ============ -->
+<footer id="statusbar">
+    <button class="stat" data-action="host.connect"><i class="dot"></i>Offline</button>
+    <button class="stat" data-action="scm.branch">main</button>
+    <span class="spacer"></span>
+    <button class="stat" data-action="editor.problems">0 errors, 0 warnings</button>
+    <button class="stat" data-action="editor.position">Ln 1, Col 1</button>
+    <button class="stat" data-action="editor.indent">Spaces: 4</button>
+    <button class="stat" data-action="editor.encoding">UTF-8</button>
+    <button class="stat" data-action="editor.language">JavaScript</button>
+</footer>
+
+<script type="module" src="./js/main.js?v=6"></script>
+<script type="module" src="./js/splitter.js"></script>
+<script src="./js/bootstrap.min.js"></script>
+</body>
+</html>

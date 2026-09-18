@@ -52,7 +52,8 @@ android {
 //noinspection UseTomlInstead
 dependencies {
   implementation(libs.androidx.core.ktx)
-  testImplementation(libs.junit)
+    implementation(libs.androidx.webkit)
+    testImplementation(libs.junit)
   androidTestImplementation(libs.androidx.junit)
   androidTestImplementation(libs.androidx.espresso.core)
 
